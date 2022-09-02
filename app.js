@@ -69,5 +69,7 @@ app.use((req, res) => {
   res.send('PAGE UNKNOWN')
 })
 
-app.on('error', (error) => { console.log(error) })
+app.on('error', (error) => {
+  console.log(error)
+})
 app.listen(3000, console.log('Server is listening...'))

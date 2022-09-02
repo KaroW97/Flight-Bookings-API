@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 const { Schema } = mongoose
-const { creteCommonSchema } = require('../common')
+const { creteCommonSchema } = require('../utils/common')
 
 const User = new Schema(
   {
@@ -17,7 +17,9 @@ const User = new Schema(
       trim: true
     },
     password: creteCommonSchema(String),
-    booked_tickets: [{ type: Schema.Types.ObjectId, ref: 'Ticket' }]
+    booked_tickets: [
+      { type: Schema.Types.ObjectId, ref: 'Ticket', required: false }
+    ]
   },
   { timestamps: true }
 )

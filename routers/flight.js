@@ -1,11 +1,14 @@
 const { Router } = require('express')
-const { createBody } = require('../common')
-const { reqValidation } = require('../JoiSchema/joiValidation')
+const { createBody } = require('../utils/common')
+const inputValidation = require('../JoiSchema/joiValidation')
+const parser = require('../services/parser/parser')
 const router = Router()
 const Flight = require('../models/Flight')
 const Ticket = require('../models/Ticket')
 const queries = require('../services/mongo/queryUtils')
+const message = require('../utils/message')
 
+//TODO: Add data check if there is something to update
 //TODO: FORBID GOING UNDER 0 WITH TICKETS/
 // FORMAT: get-my-flight?flight=id
 // to get those params req.query.id
@@ -177,6 +180,7 @@ router.get('', async (req, res) => {
   }
 })
 
+//TODO: Add validation in joi
 /**
  * Add flight
  */
@@ -199,42 +203,38 @@ router.post('/', async ({ body }, res) => {
   }
 })
 
+// FIXME: delete query and add id  to body
 /**
  * Edit flight
  */
-router.put('/update', async (req, res) => {
-  try {
-    const { query, body } = req
-    const { id } = query
+router.put(
+  '/update-flight',
+  parser.parsePath,
+  inputValidation.reqValidation,
+  async ({ body }, res) => {
+    try {
+      const { id } = body
 
-    const flight = await Flight.findById(id)
+      const flight = await Flight.findById(id)
 
-    if (!flight) throw new Error('No flight')
+      if (!flight) throw new Error('No flight')
 
-    // Add joi validation
-    const data = reqValidation(body)
+      // Update statement
+      const mongoQuery = queries.updateFlight({ data: body, id: flight._id })
 
-    // Update statement
-    const mongoQuery = queries.updateFlight({ data, id: flight._id })
+      // Update
+      await Flight.updateOne(mongoQuery.filter, mongoQuery.update)
 
-    // Update
-    await Flight.updateOne(mongoQuery.filter, mongoQuery.update)
-
-    res.send({
-      message: 'The flight has been successfully updated',
-      details: createBody(body)
-    })
-  } catch (error) {
-    res.status(400).json({
-      error: {
-        name: error.name,
-        message: error.message
-      }
-    })
-
-    throw error
+      res.send({
+        message: 'The flight has been successfully updated',
+        details: createBody(body)
+      })
+    } catch (error) {
+      console.log(error)
+      res.status(400).json(message.error(error))
+    }
   }
-})
+)
 
 /**
  * Delete flight

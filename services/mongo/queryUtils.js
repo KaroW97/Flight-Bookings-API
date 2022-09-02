@@ -12,9 +12,7 @@ exports.updateFlight = ({ data, id }) => {
 
   query.queryPlain(['_id', id])
 
-  Object.entries(data).forEach(([key, value]) => {
-    if (key !== 'action_type') query.querySet([key, value])
-  })
+  Object.entries(data).forEach(([key, value]) => query.querySet([key, value]))
 
   return createUpdateQuery(query.build())
 }
@@ -56,8 +54,7 @@ exports.updateUser = ({ data, id }) => {
   query.queryPlain(['_id', id ?? data.id])
 
   Object.entries(data).forEach(([key, value]) => {
-    if (!['action_type', '_id', 'id'].includes(key))
-      query.querySet([key, value])
+    if (!['_id', 'id'].includes(key)) query.querySet([key, value])
   })
 
   return createUpdateQuery(query.build())
@@ -120,6 +117,31 @@ exports.changeStatus = () => {
       queries.LTE(new Date('2017-01-01').toISOString())
     ])
     .querySet(['status', 'In Service'])
+    .build()
+
+  return createUpdateQuery(filter)
+}
+
+exports.updateFlightAmount = (newRank, ticketRank) => {
+  const filter = mongoQuery
+    .queryPlain([
+      `ticket_prices.${newRank}.amount`,
+      { operationType: 'PAIR', size: -1 }
+    ])
+    .queryPlain([
+      `ticket_prices.${ticketRank}.amount`,
+      { operationType: 'PAIR', size: 1, final: true }
+    ])
+    .build()
+
+  return filter.$plain
+}
+
+exports.deleteItemFromArray = (userId, ticketId) => {
+  const filter = mongoQuery
+    .queryAnd(['_id', userId])
+    .queryAnd(['booked_tickets', ticketId])
+    .queryPull(['booked_tickets', ticketId])
     .build()
 
   return createUpdateQuery(filter)

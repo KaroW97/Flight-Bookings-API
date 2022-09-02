@@ -1,4 +1,4 @@
-const { creteCommonSchema } = require('../common')
+const { creteCommonSchema } = require('../utils/common')
 const mongoose = require('mongoose')
 const { Schema } = mongoose
 
