@@ -8,8 +8,11 @@ exports.parsePath = ({ route }, res, next) => {
       cache.put('UPDATE_PROFILE')
 
     case '/delete-my-flight':
+    case '/delete-flight':
+      cache.put('DELETE_FLIGHT')
+
     case '/delete-account':
-      cache.put('DELETE')
+      cache.put('DELETE_ACCOUNT')
 
     case '/register':
       cache.put('CREATE_ACCOUNT')
@@ -24,7 +27,16 @@ exports.parsePath = ({ route }, res, next) => {
       cache.put('DELETE_PROFILE')
 
     case '/get-my-flights':
+    case '/get-all-flights':
+    case '/available-flights':
+    case '/get-flight':
       cache.put('GET_FLIGHTS')
+
+    case '/book-flight':
+      cache.put('BOOK_FLIGHT')
+
+    case '/add-new-flight':
+      cache.put('CREATE_FLIGHT')
 
     case '/get-my-tickets':
       cache.put('GET_TICKETS')
@@ -34,6 +46,9 @@ exports.parsePath = ({ route }, res, next) => {
 
     case '/get-all-users':
       cache.put('GET_ALL_USERS')
+
+    case '/logout':
+      cache.put('USER_LOGOUT')
 
     default:
       break

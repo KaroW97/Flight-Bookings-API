@@ -1,58 +1,63 @@
 const cache = require('memory-cache')
+const { deleteUndefined } = require('./common')
 
 const getCacheKey = () => cache.keys()[0]
 
 const clearCache = () => cache.clear()
 
-//TODO: Change delete to delete_account and delete flight
+const createMessage = (message, details) => {
+  return deleteUndefined({
+    message: message,
+    length: details ? details.length : undefined,
+    details
+  })
+}
+
 const chooseMessage = (details) => {
   const type = getCacheKey()
 
   clearCache()
 
   let messageData
-  //Add object holding all messages like update and so on
-  //create mesage generator
+  // TODO: Add object holding all messages like update and so on
+
   switch (type) {
     case 'UPDATE_PROFILE':
     case 'DELETE_PROFILE':
       messageData = type === 'UPDATE_PROFILE' ? 'updated' : 'deleted'
-      return {
-        message: `The user has been ${messageData}`,
-        details: `User id: ${details}`
-      }
+      return createMessage(`The user has been ${messageData}`, details)
+
     case 'GET_TICKETS':
     case 'GET_FLIGHTS':
       messageData = type === 'GET_TICKETS' ? 'tickets' : 'flights'
-      return {
-        message: `Sorted ${messageData}`,
-        [messageData]: details
-      }
-    case 'DELETE':
-      return {
-        message: 'Deleted',
-        ticket: details
-      }
+      return createMessage(`All ${messageData}`, details)
+
+    case 'DELETE_FLIGHT':
+    case 'DELETE_ACCOUNT':
+      messageData = type === 'DELETE_FLIGHT' ? 'Flight' : 'Account'
+      return createMessage(`${messageData} has been deleted`, details)
+
+    case 'CREATE_ACCOUNT':
+    case 'CREATE_FLIGHT':
+      messageData = type === 'CREATE_ACCOUNT' ? 'user' : 'flight'
+      return createMessage(`New ${messageData} has been created`, details)
 
     case 'UPDATE_TICKET':
-      return {
-        message: 'Updated Ticket',
-        details
-      }
+    case 'UPDATE_FLIGHT':
+      messageData = type === 'UPDATE_TICKET' ? 'ticket' : 'flight'
+      return createMessage(`The ${messageData} has been updated`, details)
+
+    case 'BOOK_FLIGHT':
+      return createMessage('Booked Flight', details)
 
     case 'MY_PROFILE':
-      return {
-        message: 'My Profile',
-        user: details
-      }
+      return createMessage('My Profile', details)
+
     case 'GET_ALL_USERS':
-      return {
-        message: 'All users found',
-        length: details.length,
-        details: details
-      }
-    default:
-      break
+      return createMessage('All users found', details)
+
+    case 'USER_LOGOUT':
+      return createMessage('User has been logout')
   }
 }
 

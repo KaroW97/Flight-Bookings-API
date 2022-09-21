@@ -1,6 +1,6 @@
 const { queries, MongoQuery } = require('./Query')
 const mongoQuery = new MongoQuery()
-const { createUpdateQuery } = require('./queryHelpers')
+const { generateQuery } = require('./queryHelpers')
 
 /**
  * Update flight data
@@ -14,7 +14,7 @@ exports.updateFlight = ({ data, id }) => {
 
   Object.entries(data).forEach(([key, value]) => query.querySet([key, value]))
 
-  return createUpdateQuery(query.build())
+  return generateQuery(query.build())
 }
 
 /**
@@ -40,7 +40,7 @@ exports.getFlightsToBeBooked = (data) => {
       mongoQuery.queryAnd([`ticket_prices.${key}.amount`, queries.GTE(value)])
   })
 
-  return query.build()
+  return generateQuery(query.build())
 }
 
 /**
@@ -57,7 +57,7 @@ exports.updateUser = ({ data, id }) => {
     if (!['_id', 'id'].includes(key)) query.querySet([key, value])
   })
 
-  return createUpdateQuery(query.build())
+  return generateQuery(query.build())
 }
 
 //TODO: Fix it can be don easier without checking for amount
@@ -78,7 +78,7 @@ exports.updateFlightAccessibility = ({
     'number_of_available_tickets',
     flight.number_of_available_tickets - ticketTotalAmount
   ])
-  return createUpdateQuery(query.build())
+  return generateQuery(query.build())
 }
 
 /**
@@ -89,13 +89,13 @@ exports.updateFlightAccessibility = ({
  * @param {Record<string, unknown>} share
  * @returns {Record<string, unknown>}
  */
-exports.addNewTicketToUser = ({ newTickets, _id }) => {
+exports.addNewTicketToUser = ({ newTicket, _id }) => {
   const filter = mongoQuery
     .queryPlain(['_id', _id])
-    .queryPush(['booked_tickets', newTickets])
+    .queryPush(['booked_tickets', newTicket])
     .build()
 
-  return createUpdateQuery(filter)
+  return generateQuery(filter)
 }
 
 exports.findTicketsById = (array) => {
@@ -119,7 +119,7 @@ exports.changeStatus = () => {
     .querySet(['status', 'In Service'])
     .build()
 
-  return createUpdateQuery(filter)
+  return generateQuery(filter)
 }
 
 exports.updateFlightAmount = (newRank, ticketRank) => {
@@ -144,5 +144,5 @@ exports.deleteItemFromArray = (userId, ticketId) => {
     .queryPull(['booked_tickets', ticketId])
     .build()
 
-  return createUpdateQuery(filter)
+  return generateQuery(filter)
 }

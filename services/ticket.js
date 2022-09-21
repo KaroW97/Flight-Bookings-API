@@ -1,5 +1,6 @@
 const Ticket = require('../models/Ticket')
 const queryUtils = require('./mongo/queryUtils')
+const userService = require('./user')
 const { sortString, createDetails } = require('../utils/common')
 
 exports.getTicketById = async (id) => {
@@ -78,5 +79,28 @@ exports.groupTickets = (tickets) => {
 
   return initialSort
 }
+
+exports.createNewTicket = async ({ tickets, flights, _id, randomIndex }) =>
+  Promise.all(
+    Object.entries(tickets).map(async ([key, value]) => {
+      for (let i = 0; i < value; i++) {
+        const ticket = {
+          flight: flights[randomIndex]._id,
+          user: _id,
+          rank: key,
+          price: flights[randomIndex].ticket_prices[key].price
+        }
+
+        const newTicket = await Ticket.create(ticket)
+
+        await userService.addNewTicketToUser(newTicket, _id)
+      }
+      return {
+        type: key,
+        amount: value,
+        price: flights[randomIndex].ticket_prices[key].price
+      }
+    })
+  )
 
 exports.deleteMany = (userId) => Ticket.deleteMany({ user: userId })

@@ -1,4 +1,4 @@
-exports.createUpdateQuery = (filter) => {
+exports.generateQuery = (filter) => {
   const query = { filter: {}, update: {} }
 
   if (filter.$plain) query.filter = filter.$plain

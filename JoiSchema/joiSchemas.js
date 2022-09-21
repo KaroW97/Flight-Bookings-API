@@ -8,7 +8,7 @@ const flightSchema = Joi.object({
   end_date_time: Joi.date().min(common.setMinimalTime(15)).required(),
   departure_point: Joi.string().required(),
   destination_point: Joi.string().required(),
-  ticket_prices: Joi.array().required(),
+  ticket_prices: Joi.object().required(),
   total_ticket_number: Joi.number().min(0).max(100).required(),
   number_of_available_tickets: Joi.number().min(0).max(100).required(),
   date_of_creation: Joi.date().min(common.setMinimalTime()).required()
@@ -21,7 +21,7 @@ const flightSchemaUpdate = Joi.object({
   end_date_time: Joi.date().min(common.setMinimalTime(15)),
   departure_point: Joi.string(),
   destination_point: Joi.string(),
-  ticket_prices: Joi.array(),
+  ticket_prices: Joi.object(),
   total_ticket_number: Joi.number().min(0).max(100),
   number_of_available_tickets: Joi.number().min(0).max(100)
 })
@@ -58,6 +58,15 @@ const updateTicket = Joi.object({
   role: Joi.string().valid('User')
 })
 
+const bookFlight = Joi.object({
+  tickets: {
+    Economy: Joi.number().optional(),
+    Business: Joi.number().optional(),
+    Deluxe: Joi.number().optional()
+  },
+  role: Joi.string().valid('User')
+})
+
 const chooseSchema = () => {
   const type = cache.keys()[0]
 
@@ -68,12 +77,15 @@ const chooseSchema = () => {
       return userUpdateProfile
     case 'CREATE_ACCOUNT':
       return createUser
-    case 'DELETE':
+    case 'DELETE_FLIGHT':
+    case 'DELETE_ACCOUNT':
       return deleteValidation
     case 'UPDATE_TICKET':
       return updateTicket
     case 'CREATE_FLIGHT':
       return flightSchema
+    case 'BOOK_FLIGHT':
+      return bookFlight
   }
 }
 module.exports = {

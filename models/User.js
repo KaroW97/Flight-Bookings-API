@@ -18,7 +18,10 @@ const User = new Schema(
     },
     password: creteCommonSchema(String),
     booked_tickets: [
-      { type: Schema.Types.ObjectId, ref: 'Ticket', required: false }
+      {
+        type: Schema.Types.ObjectId,
+        ref: 'Ticket'
+      }
     ]
   },
   { timestamps: true }

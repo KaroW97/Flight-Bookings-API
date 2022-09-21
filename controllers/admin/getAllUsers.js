@@ -1,5 +1,5 @@
-const User = require("../../models/User")
-const messages = require("../../utils/message")
+const User = require('../../models/User')
+const messages = require('../../utils/message')
 
 exports.getAllUsers = async (req, res) => {
   try {

@@ -1,8 +1,6 @@
-const { Router } = require('express')
-const router = Router()
+const router = require('express').Router()
 const inputValidation = require('../JoiSchema/joiValidation')
-const { userController } = require('../controllers/index')
-const parser = require('../services/parser/parser')
+const { userController, parserController } = require('../controllers/index')
 
 // TODO: Need to add hashing of the password. Would be nice
 //to have separate module for that as its used in verios plases
@@ -10,14 +8,14 @@ const parser = require('../services/parser/parser')
 /**
  * Get my account info
  */
-router.get('/profile', parser.parsePath, userController.profile)
+router.get('/profile', parserController.parsePath, userController.profile)
 
 /**
  * Edit account
  */
 router.put(
   '/edit-account',
-  parser.parsePath,
+  parserController.parsePath,
   inputValidation.reqValidation,
   userController.editAccount
 )
@@ -25,17 +23,29 @@ router.put(
 /**
  * Delete account
  */
-router.delete('/delete-account', parser.parsePath, userController.deleteAccount)
+router.delete(
+  '/delete-account',
+  parserController.parsePath,
+  userController.deleteAccount
+)
 
 /**
  * Get booked flights (MORE THEN ONE)
  */
-router.get('/get-my-flights', parser.parsePath, userController.getFlights)
+router.get(
+  '/get-my-flights',
+  parserController.parsePath,
+  userController.getFlights
+)
 
 /**
  * Get booked flights (MORE THEN ONE)
  */
-router.get('/get-my-tickets', parser.parsePath, userController.getTickets)
+router.get(
+  '/get-my-tickets',
+  parserController.parsePath,
+  userController.getTickets
+)
 
 /**
  * Edit booked flight
@@ -43,7 +53,7 @@ router.get('/get-my-tickets', parser.parsePath, userController.getTickets)
  */
 router.put(
   '/edit-my-flight',
-  parser.parsePath,
+  parserController.parsePath,
   inputValidation.reqValidation,
   userController.editFlight
 )
@@ -55,7 +65,7 @@ router.put(
  */
 router.delete(
   '/delete-my-flight',
-  parser.parsePath,
+  parserController.parsePath,
   inputValidation.reqValidation,
   userController.deleteFlight
 )

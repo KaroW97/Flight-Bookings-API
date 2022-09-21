@@ -17,4 +17,15 @@ exports.deleteItemFromBookedArray = async (userId, id) => {
     throw new Error('Ticket does not exist in booked_tickets array')
 }
 
+exports.addNewTicketToUser = async (newTicket, _id) => {
+  const { filter, update } = queryUtils.addNewTicketToUser({
+    newTicket,
+    _id
+  })
+
+  await User.updateOne(filter, update)
+}
+
+exports.createUser = (user) => User.create(user)
+
 exports.findByIdAndDelete = (userId) => User.findByIdAndDelete(userId)
