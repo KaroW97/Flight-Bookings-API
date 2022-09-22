@@ -1,6 +1,10 @@
 const router = require('express').Router()
-const inputValidation = require('../JoiSchema/joiValidation')
-const { userController, parserController } = require('../controllers/index')
+const inputValidation = require('../validation/joiValidation')
+const {
+  userController,
+  parserController,
+  adminController
+} = require('../controllers/index')
 
 // TODO: Need to add hashing of the password. Would be nice
 //to have separate module for that as its used in verios plases
@@ -14,7 +18,7 @@ router.get('/profile', parserController.parsePath, userController.profile)
  * Edit account
  */
 router.put(
-  '/edit-account',
+  '/edit-my-account',
   parserController.parsePath,
   inputValidation.reqValidation,
   userController.editAccount
@@ -24,7 +28,7 @@ router.put(
  * Delete account
  */
 router.delete(
-  '/delete-account',
+  '/delete-my-account',
   parserController.parsePath,
   userController.deleteAccount
 )
@@ -70,4 +74,37 @@ router.delete(
   userController.deleteFlight
 )
 
+// ADMIN
+
+/**
+ * Get users account
+ */
+router.get(
+  '/get-all-users',
+  inputValidation.checkIfAdmin,
+  parserController.parsePath,
+  adminController.getAllUsers
+)
+
+/**
+ * Edit user account
+ */
+router.put(
+  '/edit-account',
+  inputValidation.checkIfAdmin,
+  parserController.parsePath,
+  inputValidation.reqValidation,
+  adminController.editAccount
+)
+
+/**
+ * Delete user account
+ */
+router.delete(
+  '/delete-account',
+  inputValidation.checkIfAdmin,
+  parserController.parsePath,
+  inputValidation.reqValidation,
+  adminController.deleteAccount
+)
 module.exports = router

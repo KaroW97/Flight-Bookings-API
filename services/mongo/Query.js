@@ -1,25 +1,8 @@
 const queries = {
-  OR: (data) => ({ $or: [data] }),
   GTE: (data) => ({ $gte: data }),
-  GT: (data) => ({ $gt: data }),
-  LT: (data) => ({ $lt: data }),
   LTE: (data) => ({ $lte: data }),
   IN: (data) => ({ $in: data }),
-  PAIR: (name, data) => ({ $inc: { [name]: data } }),
-  EXPR: ({ checkType, size }, name) => ({
-    $expr: {
-      [`$${checkType.toLowerCase()}`]: [
-        { $size: { $ifNull: [`$${name}`, []] } },
-        size
-      ]
-    }
-  }),
-  NOT: (data, operation) => {
-    if (queries[operation] != undefined && data)
-      return { $not: queries[operation](data) }
-
-    throw new Error('Only objects acceptable')
-  }
+  PAIR: (name, data) => ({ $inc: { [name]: data } })
 }
 
 class MongoQuery {

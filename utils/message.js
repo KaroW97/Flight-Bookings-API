@@ -65,6 +65,7 @@ exports.success = (details) => chooseMessage(details)
 
 exports.error = (error) => ({
   error: {
+    status: error.status,
     name: error.name,
     message: error.message
   }

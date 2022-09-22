@@ -1,35 +1,30 @@
-const User = require('../../models/User')
 const { hashPassword } = require('../../services/hash')
 const message = require('../../utils/message')
-const { updateUser } = require('../../services/mongo/queryUtils')
+const errors = require('../../utils/errors')
+const userService = require('../../services/user')
+const validate = require('../../validation/validation')
 
 exports.editAccount = async ({ body }, res) => {
   try {
-    const { name, phone, email, password, id } = body || {}
+    const { id } = body || {}
 
     const data = body
 
-    if (!name && !phone && !email && !password)
-      throw new Error('No data to update')
+    validate.checkIfDataUpdate(body)
 
-    const userToUpdate = await User.findById(id)
+    const userToUpdate = await userService.findUserById(id)
 
     if (body.password) {
       data.password = await hashPassword(body, userToUpdate)
     }
-
-    const { update } = updateUser({ data })
-
-    const userUpdate = await userToUpdate.updateOne(update)
-
-    if (!userUpdate) throw new Error('No user with given id was found')
+    await userService.updateAccount(data)
 
     res.send(message.success({ ...userToUpdate._doc, ...data }))
   } catch (error) {
-    if (error.codeName === 'DuplicateKey') {
-      res.status(400).json({ error: new Error('Duplication') })
+    if (error.code === 11000) {
+      return res.send(message.error(new errors.MongoServerError()))
     }
 
-    res.json(message.error(error))
+    res.send(message.error(error))
   }
 }

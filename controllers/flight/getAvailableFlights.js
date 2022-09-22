@@ -1,12 +1,9 @@
-const Flight = require('../../models/Flight')
 const message = require('../../utils/message')
-const queries = require('../../services/mongo/queryUtils')
+const flightService = require('../../services/flight')
 
 exports.getAvailableFlights = async (req, res) => {
   try {
-    const query = queries.getAvailableFlights()
-
-    const flights = await Flight.find(query)
+    const flights = await flightService.getAvailableFlights()
 
     res.send(message.success(flights))
   } catch (error) {

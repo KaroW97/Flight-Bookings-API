@@ -1,11 +1,14 @@
 const queryUtils = require('./mongo/queryUtils')
 const User = require('../models/User')
-const { createDetails } = require('../utils/common')
+const validate = require('../validation/validation')
 
 exports.updateAccount = async (data, id) => {
   const { filter, update } = queryUtils.updateUser({ data, id })
 
-  await User.updateOne(filter, update)
+  const userUpdate = await User.updateOne(filter, update)
+
+  validate.checkIfUserExists(userUpdate)
+
 }
 
 exports.deleteItemFromBookedArray = async (userId, id) => {
@@ -13,8 +16,7 @@ exports.deleteItemFromBookedArray = async (userId, id) => {
 
   const deleteTicket = await User.updateOne(filter, update)
 
-  if (deleteTicket.modifiedCount === 0)
-    throw new Error('Ticket does not exist in booked_tickets array')
+  validate.checkIfTicketHistoryUpdated(deleteTicket)
 }
 
 exports.addNewTicketToUser = async (newTicket, _id) => {
@@ -28,4 +30,20 @@ exports.addNewTicketToUser = async (newTicket, _id) => {
 
 exports.createUser = (user) => User.create(user)
 
-exports.findByIdAndDelete = (userId) => User.findByIdAndDelete(userId)
+exports.findByIdAndDelete = (userId) => {
+  const user = User.findByIdAndDelete(userId)
+
+  validate.checkIfUserExists(user)
+
+  return user
+}
+
+exports.findUserById = (id) => User.findById(id)
+
+exports.getUsersByRole = async (role = 'User') => {
+  const users = await User.find({ role })
+
+  validate.checkIfUserExists(users.length)
+
+  return users
+}

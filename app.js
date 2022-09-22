@@ -9,7 +9,8 @@ const flash = require('express-flash')
 const Flight = require('./routers/flight')
 const User = require('./routers/user')
 const Auth = require('./routers/auth')
-const Admin = require('./routers/admin')
+const message = require('./utils/message')
+const errors = require('./utils/errors')
 
 const app = express()
 
@@ -46,18 +47,8 @@ const checkAuthenticated = (req, res, next) => {
   res.json({ message: 'Need to log in' })
 }
 
-const checkIfAdmin = (req, res, next) => {
-  if (req.user && req.user.role !== 'Admin')
-    return res.json({ message: 'Access denied' })
-
-  if (req.isAuthenticated()) return next()
-
-  res.json({ message: 'Need to log in' })
-}
-
 app.use('/flight', checkAuthenticated, Flight)
 app.use('/user', checkAuthenticated, User)
-app.use('/admin', checkIfAdmin, Admin)
 app.use('', Auth)
 
 /**
@@ -65,8 +56,8 @@ app.use('', Auth)
  */
 app.use((req, res) => {
   res.status(404)
-  //errorMessage(new errors.NotFound())
-  res.send('PAGE UNKNOWN')
+
+  res.send(message.error(new errors.NotFoundError()))
 })
 
 app.on('error', (error) => {

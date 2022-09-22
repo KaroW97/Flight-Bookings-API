@@ -1,7 +1,7 @@
 const ticketService = require('../../services/ticket')
 const flightService = require('../../services/flight')
 const message = require('../../utils/message')
-const validation = require('../../utils/validation')
+const validation = require('../../validation/validation')
 
 exports.editFlight = async ({ body }, res) => {
   try {

@@ -98,8 +98,8 @@ exports.addNewTicketToUser = ({ newTicket, _id }) => {
   return generateQuery(filter)
 }
 
-exports.findTicketsById = (array) => {
-  const filter = mongoQuery.queryPlain(['_id', queries.IN(array)]).build()
+exports.findTicketsById = (array, key = '_id') => {
+  const filter = mongoQuery.queryPlain([key, queries.IN(array)]).build()
 
   return filter.$plain
 }

@@ -1,12 +1,13 @@
 const queryUtils = require('./mongo/queryUtils')
 const Flight = require('../models/Flight')
+const validate = require('../validation/validation')
 
 exports.createFlight = (flight) => Flight.create(flight)
 
 exports.deleteFlight = async ({ id }) => {
   const flight = await Flight.findOneAndDelete({ id })
-  console.log(flight)
-  if (!flight) throw new Error('No flights')
+
+  validate.checkIfFlightExists(flight)
 
   return flight
 }
@@ -22,7 +23,7 @@ exports.updateFlight = async (data, id) => {
 exports.getAllFlights = async () => {
   const flights = await Flight.find()
 
-  if (!flights.length) throw new Error('No flights')
+  validate.checkIfFlightExists(flights.length)
 
   return flights
 }
@@ -30,7 +31,7 @@ exports.getAllFlights = async () => {
 exports.getFlightById = async ({ id }) => {
   const flight = await Flight.findById(id)
 
-  if (!flight) throw new Error('No flight was found')
+  validate.checkIfFlightExists(flight)
 
   return flight
 }
@@ -40,7 +41,7 @@ exports.updateFlightAndGetPrice = async (newRank, { rank, flight }) => {
 
   const updatedFlight = await Flight.findByIdAndUpdate(flight, update)
 
-  if (!updatedFlight) throw new Error('No flight')
+  validate.checkIfFlightExists(updatedFlight)
 
   return updatedFlight.ticket_prices[newRank].price
 }
@@ -50,7 +51,7 @@ exports.getFlights = async (ticketsIds) => {
 
   const flights = await Flight.find(query)
 
-  if (!flights.length) throw new Error('No flights')
+  validate.checkIfFlightExists(flights.length)
 
   return flights
 }
@@ -60,7 +61,7 @@ exports.getAvailableFlightsToBook = async (tickets) => {
 
   const flights = await Flight.find(filter)
 
-  if (!flights.length) throw new Error('No flights')
+  validate.checkIfFlightExists(flights.length)
 
   return flights
 }
@@ -78,4 +79,14 @@ exports.updateFlightAccessibility = async (tickets, flight) => {
   })
 
   await Flight.updateOne(filter, update)
+}
+
+exports.getAvailableFlights = async () => {
+  const query = queryUtils.getAvailableFlights()
+
+  const flights = await Flight.find(query)
+
+  validate.checkIfFlightExists(flights.length)
+
+  return flights
 }

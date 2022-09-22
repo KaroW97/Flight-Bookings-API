@@ -2,11 +2,12 @@ const Ticket = require('../models/Ticket')
 const queryUtils = require('./mongo/queryUtils')
 const userService = require('./user')
 const { sortString, createDetails } = require('../utils/common')
+const validate = require('../validation/validation')
 
 exports.getTicketById = async (id) => {
   const ticket = await Ticket.findById(id)
 
-  if (!ticket) throw new Error('No ticket')
+  validate.checkIfTicketExists(ticket)
 
   return ticket
 }
@@ -14,19 +15,11 @@ exports.getTicketById = async (id) => {
 exports.getAndSortTickets = async (user) => {
   const tickets = await Ticket.find({ user })
 
-  if (!tickets) throw new Error('No ticket')
+  validate.checkIfTicketExists(tickets.length)
 
   const sorted = sortString(tickets)
 
   return sorted
-}
-
-exports.findTicketAndDelete = async (id) => {
-  const ticket = await Ticket.findOneAndDelete({ _id: id })
-
-  if (!ticket) throw new Error('Ticket not found')
-
-  return ticket
 }
 
 exports.noReptTickets = (tickets) => {
@@ -40,7 +33,7 @@ exports.getTickets = async (bookedTicketsIds) => {
 
   const tickets = await Ticket.find(query)
 
-  if (!tickets) throw new Error('No tickets')
+  validate.checkIfTicketExists(tickets.length)
 
   const sorted = sortString(tickets)
 
@@ -102,5 +95,23 @@ exports.createNewTicket = async ({ tickets, flights, _id, randomIndex }) =>
       }
     })
   )
+
+exports.findManyTicketsAndDelete = async (user) => {
+  const tickets = await Ticket.find({ user })
+
+  const ids = tickets.map((item) => item._id)
+
+  const query = queryUtils.findTicketsById(ids)
+
+  await Ticket.deleteMany(query)
+}
+
+exports.findTicketAndDelete = async (_id) => {
+  const ticket = await Ticket.findOneAndDelete({ _id })
+
+  validate.checkIfTicketExists(ticket)
+
+  return ticket
+}
 
 exports.deleteMany = (userId) => Ticket.deleteMany({ user: userId })

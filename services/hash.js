@@ -1,11 +1,12 @@
 const bcrypt = require('bcrypt')
+const validate = require('../validation/validation')
 
 exports.hashPassword = async (data, user) => {
   if (!data.password) return user.password
 
-  const checkIfSame = await bcrypt.compare(data.password, user.password)
+  const compare = await bcrypt.compare(data.password, user.password)
 
-  if (checkIfSame) throw new Error('New password is the same as old one')
+  validate.validatePassword(compare)
 
   const hashedPassword = await bcrypt.hash(data.password, 10)
 

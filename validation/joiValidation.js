@@ -3,6 +3,15 @@ const { chooseSchema } = require('./joiSchemas')
 
 const joiValidate = (data, schema) => schema.validate(data)
 
+const checkIfAdmin = (req, res, next) => {
+  if (req.user && req.user.role !== 'Admin')
+    return res.json({ message: 'Access denied' })
+
+  if (req.isAuthenticated()) return next()
+
+  res.json({ message: 'Need to log in' })
+}
+
 const reqValidation = ({ user, body }, res, next) => {
   try {
     let newBody
@@ -16,7 +25,7 @@ const reqValidation = ({ user, body }, res, next) => {
 
     const validate = joiValidate(newBody ?? body, chooseSchema())
 
-    if (validate.error) throw new Error(validate.error)
+    if (validate.error) throw validate.error
 
     next()
   } catch (error) {
@@ -25,5 +34,6 @@ const reqValidation = ({ user, body }, res, next) => {
 }
 
 module.exports = {
-  reqValidation
+  reqValidation,
+  checkIfAdmin
 }

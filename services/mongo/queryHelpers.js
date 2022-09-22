@@ -10,15 +10,3 @@ exports.generateQuery = (filter) => {
 
   return query
 }
-
-exports.createInvalidCustomerResponse = (data, { vin, location }) =>
-  data.map(({ rentingDriver }) => ({
-    vin,
-    location,
-    driver: {
-      firstName: rentingDriver.firstName,
-      lastName: rentingDriver.lastName,
-      licenseNumber: rentingDriver.licenseNumber,
-      cardValidTill: rentingDriver.creditCard.validThrough
-    }
-  }))
