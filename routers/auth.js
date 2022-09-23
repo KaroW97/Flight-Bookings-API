@@ -2,7 +2,6 @@ const router = require('express').Router()
 const inputValidation = require('../validation/joiValidation')
 const { authController, parserController } = require('../controllers/index')
 
-//TODO: DELETE SHOWING PASSWORD TO FRONT
 router.post('/login', authController.loginAuthentication)
 
 router.get('/login', authController.login)

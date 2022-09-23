@@ -1,4 +1,4 @@
-const queryUtils = require('./mongo/queryUtils')
+const { queryUtils } = require('../utils/index')
 const User = require('../models/User')
 const validate = require('../validation/validation')
 
@@ -8,7 +8,6 @@ exports.updateAccount = async (data, id) => {
   const userUpdate = await User.updateOne(filter, update)
 
   validate.checkIfUserExists(userUpdate)
-
 }
 
 exports.deleteItemFromBookedArray = async (userId, id) => {

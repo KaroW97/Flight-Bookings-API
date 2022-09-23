@@ -1,4 +1,4 @@
-const message = require('../../utils/message')
+const { message } = require('../../utils/index')
 const passport = require('passport')
 
 exports.loginAuthentication = passport.authenticate('local', {

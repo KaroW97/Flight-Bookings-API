@@ -1,6 +1,5 @@
-const hashService = require('../../services/hash')
-const userService = require('../../services/user')
-const message = require('../../utils/message')
+const { userService, hashService } = require('../../services/index')
+const { message } = require('../../utils/index')
 
 exports.editAccount = async ({ body, user }, res) => {
   try {

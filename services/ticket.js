@@ -1,7 +1,6 @@
 const Ticket = require('../models/Ticket')
-const queryUtils = require('./mongo/queryUtils')
+const { queryUtils, common } = require('../utils/index')
 const userService = require('./user')
-const { sortString, createDetails } = require('../utils/common')
 const validate = require('../validation/validation')
 
 exports.getTicketById = async (id) => {
@@ -17,7 +16,7 @@ exports.getAndSortTickets = async (user) => {
 
   validate.checkIfTicketExists(tickets.length)
 
-  const sorted = sortString(tickets)
+  const sorted = common.sortString(tickets)
 
   return sorted
 }
@@ -35,7 +34,7 @@ exports.getTickets = async (bookedTicketsIds) => {
 
   validate.checkIfTicketExists(tickets.length)
 
-  const sorted = sortString(tickets)
+  const sorted = common.sortString(tickets)
 
   return sorted
 }
@@ -45,7 +44,7 @@ exports.groupTickets = (tickets) => {
     const firstElem = prev[0] || undefined
 
     if (index === 0) {
-      prev.push(createDetails(flight, flight.flight))
+      prev.push(common.createDetails(flight, flight.flight))
 
       return prev
     }
@@ -65,7 +64,7 @@ exports.groupTickets = (tickets) => {
       return prev
     }
 
-    prev.unshift(createDetails(flight, flight.flight))
+    prev.unshift(common.createDetails(flight, flight.flight))
 
     return prev
   }, [])

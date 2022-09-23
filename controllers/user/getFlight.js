@@ -1,6 +1,5 @@
-const ticketService = require('../../services/ticket')
-const flightService = require('../../services/flight')
-const message = require('../../utils/message')
+const { flightService, ticketService } = require('../../services/index')
+const { message } = require('../../utils/index')
 
 exports.getFlights = async ({ user }, res) => {
   try {

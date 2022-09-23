@@ -1,8 +1,8 @@
-const errors = require('../utils/errors')
+const { errors } = require('../utils/index')
 
 exports.checkIfRankChanged = (newRank, currentRank) => {
   if (newRank === currentRank)
-    throw new Error('Ticket rank is the same as previous')
+    throw new errors.BadRequestError('Ticket rank is the same as previous')
 }
 
 exports.checkIfUserExists = (user) => {
@@ -24,7 +24,6 @@ exports.checkIfTicketHistoryUpdated = (data) => {
 exports.validatePassword = (compared) => {
   if (compared)
     throw new errors.BadRequestError('New password is the same as old one')
-
 }
 
 exports.checkIfDataUpdate = ({ name, phone, email, password }) => {

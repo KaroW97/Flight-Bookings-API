@@ -1,4 +1,4 @@
-const queryUtils = require('./mongo/queryUtils')
+const { queryUtils } = require('../utils/index')
 const Flight = require('../models/Flight')
 const validate = require('../validation/validation')
 
@@ -78,7 +78,7 @@ exports.updateFlightAccessibility = async (tickets, flight) => {
     flight
   })
 
-  await Flight.updateOne(filter, update)
+  await Flight.updateOne(filter, update.$set)
 }
 
 exports.getAvailableFlights = async () => {

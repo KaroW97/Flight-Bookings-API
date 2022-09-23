@@ -1,13 +1,32 @@
 const cache = require('memory-cache')
-const { deleteUndefined } = require('./common')
+const common = require('./common')
 
 const getCacheKey = () => cache.keys()[0]
 
 const clearCache = () => cache.clear()
 
-const createMessage = (message, details) => {
-  return deleteUndefined({
-    message: message,
+const messages = {
+  UPDATE_PROFILE: 'The user has been updated',
+  DELETE_PROFILE: 'The user has been deleted',
+  GET_TICKETS: 'All tickets',
+  GET_FLIGHTS: 'All flights',
+  DELETE_FLIGHT: 'Flight has been deleted',
+  DELETE_ACCOUNT: 'Account has been deleted',
+  CREATE_ACCOUNT: 'New user has been created',
+  CREATE_FLIGHT: 'New flight has been created',
+  UPDATE_TICKET: 'The ticket has been updated',
+  UPDATE_FLIGHT: 'The flight has been updated',
+  BOOK_FLIGHT: 'Booked Flight',
+  MY_PROFILE: 'My Profile',
+  GET_ALL_USERS: 'All users found',
+  USER_LOGOUT: 'User has been logout'
+}
+
+const createMessage = (type, details) => {
+  if (details.password) details.password = undefined
+
+  return common.deleteUndefined({
+    message: messages[type],
     length: details ? details.length : undefined,
     details
   })
@@ -18,47 +37,7 @@ const chooseMessage = (details) => {
 
   clearCache()
 
-  let messageData
-  // TODO: Add object holding all messages like update and so on
-
-  switch (type) {
-    case 'UPDATE_PROFILE':
-    case 'DELETE_PROFILE':
-      messageData = type === 'UPDATE_PROFILE' ? 'updated' : 'deleted'
-      return createMessage(`The user has been ${messageData}`, details)
-
-    case 'GET_TICKETS':
-    case 'GET_FLIGHTS':
-      messageData = type === 'GET_TICKETS' ? 'tickets' : 'flights'
-      return createMessage(`All ${messageData}`, details)
-
-    case 'DELETE_FLIGHT':
-    case 'DELETE_ACCOUNT':
-      messageData = type === 'DELETE_FLIGHT' ? 'Flight' : 'Account'
-      return createMessage(`${messageData} has been deleted`, details)
-
-    case 'CREATE_ACCOUNT':
-    case 'CREATE_FLIGHT':
-      messageData = type === 'CREATE_ACCOUNT' ? 'user' : 'flight'
-      return createMessage(`New ${messageData} has been created`, details)
-
-    case 'UPDATE_TICKET':
-    case 'UPDATE_FLIGHT':
-      messageData = type === 'UPDATE_TICKET' ? 'ticket' : 'flight'
-      return createMessage(`The ${messageData} has been updated`, details)
-
-    case 'BOOK_FLIGHT':
-      return createMessage('Booked Flight', details)
-
-    case 'MY_PROFILE':
-      return createMessage('My Profile', details)
-
-    case 'GET_ALL_USERS':
-      return createMessage('All users found', details)
-
-    case 'USER_LOGOUT':
-      return createMessage('User has been logout')
-  }
+  return createMessage(type, details)
 }
 
 exports.success = (details) => chooseMessage(details)

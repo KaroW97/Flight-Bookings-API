@@ -1,7 +1,5 @@
-const { hashPassword } = require('../../services/hash')
-const message = require('../../utils/message')
-const errors = require('../../utils/errors')
-const userService = require('../../services/user')
+const { message, errors } = require('../../utils/index')
+const { userService, hashService } = require('../../services/index')
 const validate = require('../../validation/validation')
 
 exports.editAccount = async ({ body }, res) => {
@@ -15,7 +13,7 @@ exports.editAccount = async ({ body }, res) => {
     const userToUpdate = await userService.findUserById(id)
 
     if (body.password) {
-      data.password = await hashPassword(body, userToUpdate)
+      data.password = await hashService.hashPassword(body, userToUpdate)
     }
     await userService.updateAccount(data)
 

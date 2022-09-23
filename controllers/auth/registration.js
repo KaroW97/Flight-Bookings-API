@@ -1,6 +1,6 @@
 const bcrypt = require('bcrypt')
-const message = require('../../utils/message')
-const userService = require('../../services/user')
+const { message } = require('../../utils/index')
+const { userService } = require('../../services/index')
 
 exports.registration = async ({ body }, res) => {
   try {

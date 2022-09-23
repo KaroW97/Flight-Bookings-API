@@ -23,6 +23,18 @@ class NotFoundError extends Error {
   }
 }
 
+/**
+ * Data Already exists
+ */
+class MongoServerError extends Error {
+  constructor(details = 'Duplication or bad syntax error') {
+    super('CONFLICT')
+    this.status = 409
+    this.name = 'CONFLICT'
+    this.message = details
+  }
+}
+
 class UpdateError extends NotFoundError {
   constructor() {
     super('No data to be updated found')
@@ -50,18 +62,6 @@ class TicketHistoryError extends NotFoundError {
 class UserError extends NotFoundError {
   constructor() {
     super('There is no users to be found')
-  }
-}
-
-/**
- * Data Already exists
- */
-class MongoServerError extends Error {
-  constructor(details = 'Duplication or bad syntax error') {
-    super('CONFLICT')
-    this.status = 409
-    this.name = 'CONFLICT'
-    this.message = details
   }
 }
 

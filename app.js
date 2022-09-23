@@ -9,8 +9,7 @@ const flash = require('express-flash')
 const Flight = require('./routers/flight')
 const User = require('./routers/user')
 const Auth = require('./routers/auth')
-const message = require('./utils/message')
-const errors = require('./utils/errors')
+const { message, errors } = require('./utils/index')
 
 const app = express()
 

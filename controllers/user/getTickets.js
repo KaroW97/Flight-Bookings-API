@@ -1,5 +1,5 @@
-const ticketService = require('../../services/ticket')
-const message = require('../../utils/message')
+const { ticketService } = require('../../services/index')
+const { message } = require('../../utils/index')
 
 exports.getTickets = async ({ user }, res) => {
   try {

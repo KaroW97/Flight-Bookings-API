@@ -1,6 +1,5 @@
-const message = require('../../utils/message')
-const ticketService = require('../../services/ticket')
-const flightService = require('../../services/flight')
+const { message } = require('../../utils/index')
+const { flightService, ticketService } = require('../../services/index')
 
 const getRandomFlight = (flights) => Math.floor(Math.random() * flights.length)
 

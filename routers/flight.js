@@ -8,9 +8,7 @@ const {
 } = require('../controllers/index')
 
 //TODO: Add data check if there is something to update
-//TODO: FORBID GOING UNDER 0 WITH TICKETS/
-// FORMAT: get-my-flight?flight=id
-// to get those params req.query.id
+//TODO: FORBID GOING UNDER 0 WITH TICKETS
 
 /**
  * Get available flight

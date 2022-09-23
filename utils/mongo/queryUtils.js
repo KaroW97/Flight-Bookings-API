@@ -60,7 +60,6 @@ exports.updateUser = ({ data, id }) => {
   return generateQuery(query.build())
 }
 
-//TODO: Fix it can be don easier without checking for amount
 exports.updateFlightAccessibility = ({
   ticketTotalAmount,
   tickets,
@@ -69,16 +68,33 @@ exports.updateFlightAccessibility = ({
   const query = mongoQuery.queryPlain(['_id', flight._id])
 
   Object.entries(tickets).forEach(([key, value]) => {
-    const currentFlight = flight.ticket_prices[key].amount
-
-    query.querySet([`ticket_prices.${key}.amount`, currentFlight - value])
+    query.querySet([
+      `ticket_prices.${key}.amount`,
+      { operationType: 'PAIR', size: -value }
+    ])
   })
-  //It can be inc passing only amount about wich it has to be decreased
+
   query.querySet([
     'number_of_available_tickets',
-    flight.number_of_available_tickets - ticketTotalAmount
+    { operationType: 'PAIR', size: -ticketTotalAmount, final: true }
   ])
+
   return generateQuery(query.build())
+}
+
+exports.updateFlightAmount = (newRank, ticketRank) => {
+  const filter = mongoQuery
+    .queryPlain([
+      `ticket_prices.${newRank}.amount`,
+      { operationType: 'PAIR', size: -1 }
+    ])
+    .queryPlain([
+      `ticket_prices.${ticketRank}.amount`,
+      { operationType: 'PAIR', size: 1, final: true }
+    ])
+    .build()
+
+  return filter.$plain
 }
 
 /**
@@ -100,39 +116,6 @@ exports.addNewTicketToUser = ({ newTicket, _id }) => {
 
 exports.findTicketsById = (array, key = '_id') => {
   const filter = mongoQuery.queryPlain([key, queries.IN(array)]).build()
-
-  return filter.$plain
-}
-
-/**
- * Returns query for getting element with "mileage" >= 100000 or "car_info.date" <= 2017-01-01
- * then set "status" to "In Service"
- * @returns {Record<string, unknown>}
- */
-exports.changeStatus = () => {
-  const filter = mongoQuery
-    .queryOr(['mileage', queries.GTE(100000)])
-    .queryOr([
-      'car_info.date',
-      queries.LTE(new Date('2017-01-01').toISOString())
-    ])
-    .querySet(['status', 'In Service'])
-    .build()
-
-  return generateQuery(filter)
-}
-
-exports.updateFlightAmount = (newRank, ticketRank) => {
-  const filter = mongoQuery
-    .queryPlain([
-      `ticket_prices.${newRank}.amount`,
-      { operationType: 'PAIR', size: -1 }
-    ])
-    .queryPlain([
-      `ticket_prices.${ticketRank}.amount`,
-      { operationType: 'PAIR', size: 1, final: true }
-    ])
-    .build()
 
   return filter.$plain
 }

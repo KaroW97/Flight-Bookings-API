@@ -1,6 +1,5 @@
-const userService = require('../../services/user')
-const ticketService = require('../../services/ticket')
-const message = require('../../utils/message')
+const { userService, ticketService } = require('../../services/index')
+const { message } = require('../../utils/index')
 
 exports.deleteAccount = async ({ user }, res) => {
   try {

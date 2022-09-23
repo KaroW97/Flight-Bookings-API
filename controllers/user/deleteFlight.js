@@ -1,6 +1,5 @@
-const userService = require('../../services/user')
-const ticketService = require('../../services/ticket')
-const message = require('../../utils/message')
+const { ticketService, userService } = require('../../services/index')
+const { message } = require('../../utils/index')
 
 exports.deleteFlight = async ({ user, body }, res) => {
   try {

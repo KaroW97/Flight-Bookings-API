@@ -1,4 +1,4 @@
-const message = require('../utils/message')
+const { message } = require('../utils/index')
 const { chooseSchema } = require('./joiSchemas')
 
 const joiValidate = (data, schema) => schema.validate(data)

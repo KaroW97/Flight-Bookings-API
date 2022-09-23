@@ -1,6 +1,6 @@
 const Joi = require('joi')
 const cache = require('memory-cache')
-const common = require('../utils/common')
+const { common } = require('../utils/index')
 
 const flightSchema = Joi.object({
   role: Joi.string().valid('Admin'),

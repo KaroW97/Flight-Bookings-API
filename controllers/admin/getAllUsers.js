@@ -1,5 +1,5 @@
-const messages = require('../../utils/message')
-const userService = require('../../services/user')
+const { messages } = require('../../utils/index')
+const { userService } = require('../../services/index')
 
 exports.getAllUsers = async (req, res) => {
   try {
