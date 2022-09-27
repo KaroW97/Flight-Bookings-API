@@ -1,5 +1,5 @@
-const { message } = require('../../utils/index')
 const { ticketService, userService } = require('../../services/index')
+const { message } = require('../../utils/index')
 
 exports.deleteAccount = async ({ body }, res) => {
   try {

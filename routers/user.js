@@ -1,13 +1,10 @@
+const { validation } = require('../validation/index')
 const router = require('express').Router()
-const inputValidation = require('../validation/joiValidation')
 const {
   userController,
   parserController,
   adminController
 } = require('../controllers/index')
-
-// TODO: Need to add hashing of the password. Would be nice
-//to have separate module for that as its used in verios plases
 
 /**
  * Get my account info
@@ -20,7 +17,7 @@ router.get('/profile', parserController.parsePath, userController.profile)
 router.put(
   '/edit-my-account',
   parserController.parsePath,
-  inputValidation.reqValidation,
+  validation.reqValidation,
   userController.editAccount
 )
 
@@ -58,7 +55,7 @@ router.get(
 router.put(
   '/edit-my-flight',
   parserController.parsePath,
-  inputValidation.reqValidation,
+  validation.reqValidation,
   userController.editFlight
 )
 
@@ -70,7 +67,7 @@ router.put(
 router.delete(
   '/delete-my-flight',
   parserController.parsePath,
-  inputValidation.reqValidation,
+  validation.reqValidation,
   userController.deleteFlight
 )
 
@@ -81,7 +78,7 @@ router.delete(
  */
 router.get(
   '/get-all-users',
-  inputValidation.checkIfAdmin,
+  validation.checkIfAdmin,
   parserController.parsePath,
   adminController.getAllUsers
 )
@@ -91,9 +88,9 @@ router.get(
  */
 router.put(
   '/edit-account',
-  inputValidation.checkIfAdmin,
+  validation.checkIfAdmin,
   parserController.parsePath,
-  inputValidation.reqValidation,
+  validation.reqValidation,
   adminController.editAccount
 )
 
@@ -102,9 +99,10 @@ router.put(
  */
 router.delete(
   '/delete-account',
-  inputValidation.checkIfAdmin,
+  validation.checkIfAdmin,
   parserController.parsePath,
-  inputValidation.reqValidation,
+  validation.reqValidation,
   adminController.deleteAccount
 )
+
 module.exports = router

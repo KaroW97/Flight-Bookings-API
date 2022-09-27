@@ -1,5 +1,5 @@
-const { message } = require('../../utils/index')
 const { flightService } = require('../../services/index')
+const { message } = require('../../utils/index')
 
 exports.deleteFlight = async ({ body }, res) => {
   try {

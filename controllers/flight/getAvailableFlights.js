@@ -1,5 +1,5 @@
-const { message } = require('../../utils/index')
 const { flightService } = require('../../services/index')
+const { message } = require('../../utils/index')
 
 exports.getAvailableFlights = async (req, res) => {
   try {

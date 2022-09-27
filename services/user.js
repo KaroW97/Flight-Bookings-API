@@ -1,13 +1,21 @@
+const { User, UserSchema } = require('../models/User')
+const { validation } = require('../validation/index')
 const { queryUtils } = require('../utils/index')
-const User = require('../models/User')
-const validate = require('../validation/validation')
+
+exports.createUser = (user) => {
+  if (user.role !== 'Admin') UserSchema.emit('create_ticket_array')
+
+  User.create(user)
+}
+
+exports.findUserById = (id) => User.findById(id)
 
 exports.updateAccount = async (data, id) => {
   const { filter, update } = queryUtils.updateUser({ data, id })
 
   const userUpdate = await User.updateOne(filter, update)
 
-  validate.checkIfUserExists(userUpdate)
+  validation.checkIfUserExists(userUpdate)
 }
 
 exports.deleteItemFromBookedArray = async (userId, id) => {
@@ -15,7 +23,7 @@ exports.deleteItemFromBookedArray = async (userId, id) => {
 
   const deleteTicket = await User.updateOne(filter, update)
 
-  validate.checkIfTicketHistoryUpdated(deleteTicket)
+  validation.checkIfTicketHistoryUpdated(deleteTicket)
 }
 
 exports.addNewTicketToUser = async (newTicket, _id) => {
@@ -27,22 +35,18 @@ exports.addNewTicketToUser = async (newTicket, _id) => {
   await User.updateOne(filter, update)
 }
 
-exports.createUser = (user) => User.create(user)
-
 exports.findByIdAndDelete = (userId) => {
   const user = User.findByIdAndDelete(userId)
 
-  validate.checkIfUserExists(user)
+  validation.checkIfUserExists(user)
 
   return user
 }
 
-exports.findUserById = (id) => User.findById(id)
-
 exports.getUsersByRole = async (role = 'User') => {
   const users = await User.find({ role })
 
-  validate.checkIfUserExists(users.length)
+  validation.checkIfUserExists(users.length)
 
   return users
 }

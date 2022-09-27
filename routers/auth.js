@@ -1,6 +1,6 @@
-const router = require('express').Router()
-const inputValidation = require('../validation/joiValidation')
 const { authController, parserController } = require('../controllers/index')
+const { validation } = require('../validation/index')
+const router = require('express').Router()
 
 router.post('/login', authController.loginAuthentication)
 
@@ -9,7 +9,7 @@ router.get('/login', authController.login)
 router.post(
   '/register',
   parserController.parsePath,
-  inputValidation.reqValidation,
+  validation.reqValidation,
   authController.registration
 )
 

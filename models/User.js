@@ -1,6 +1,6 @@
+const { common } = require('../utils/index')
 const mongoose = require('mongoose')
 const { Schema } = mongoose
-const { common } = require('../utils/index')
 
 const User = new Schema(
   {
@@ -16,15 +16,23 @@ const User = new Schema(
       unique: true,
       trim: true
     },
-    password: common.creteCommonSchema(String),
+    password: common.creteCommonSchema(String)
+  },
+  { timestamps: true }
+)
+
+User.on('create_ticket_array', () => {
+  User.add({
     booked_tickets: [
       {
         type: Schema.Types.ObjectId,
         ref: 'Ticket'
       }
     ]
-  },
-  { timestamps: true }
-)
+  })
+})
 
-module.exports = mongoose.model('User', User)
+module.exports = {
+  User: mongoose.model('User', User),
+  UserSchema: User
+}

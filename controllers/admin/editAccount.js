@@ -1,6 +1,6 @@
-const { message, errors } = require('../../utils/index')
 const { userService, hashService } = require('../../services/index')
-const validate = require('../../validation/validation')
+const { message, errors } = require('../../utils/index')
+const { validation } = require('../../validation/index')
 
 exports.editAccount = async ({ body }, res) => {
   try {
@@ -8,7 +8,7 @@ exports.editAccount = async ({ body }, res) => {
 
     const data = body
 
-    validate.checkIfDataUpdate(body)
+    validation.checkIfDataUpdate(body)
 
     const userToUpdate = await userService.findUserById(id)
 

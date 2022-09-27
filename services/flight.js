@@ -1,13 +1,13 @@
+const { validation } = require('../validation/index')
 const { queryUtils } = require('../utils/index')
 const Flight = require('../models/Flight')
-const validate = require('../validation/validation')
 
 exports.createFlight = (flight) => Flight.create(flight)
 
 exports.deleteFlight = async ({ id }) => {
   const flight = await Flight.findOneAndDelete({ id })
 
-  validate.checkIfFlightExists(flight)
+  validation.checkIfFlightExists(flight)
 
   return flight
 }
@@ -23,7 +23,7 @@ exports.updateFlight = async (data, id) => {
 exports.getAllFlights = async () => {
   const flights = await Flight.find()
 
-  validate.checkIfFlightExists(flights.length)
+  validation.checkIfFlightExists(flights.length)
 
   return flights
 }
@@ -31,7 +31,7 @@ exports.getAllFlights = async () => {
 exports.getFlightById = async ({ id }) => {
   const flight = await Flight.findById(id)
 
-  validate.checkIfFlightExists(flight)
+  validation.checkIfFlightExists(flight)
 
   return flight
 }
@@ -41,7 +41,7 @@ exports.updateFlightAndGetPrice = async (newRank, { rank, flight }) => {
 
   const updatedFlight = await Flight.findByIdAndUpdate(flight, update)
 
-  validate.checkIfFlightExists(updatedFlight)
+  validation.checkIfFlightExists(updatedFlight)
 
   return updatedFlight.ticket_prices[newRank].price
 }
@@ -51,7 +51,7 @@ exports.getFlights = async (ticketsIds) => {
 
   const flights = await Flight.find(query)
 
-  validate.checkIfFlightExists(flights.length)
+  validation.checkIfFlightExists(flights.length)
 
   return flights
 }
@@ -61,7 +61,7 @@ exports.getAvailableFlightsToBook = async (tickets) => {
 
   const flights = await Flight.find(filter)
 
-  validate.checkIfFlightExists(flights.length)
+  validation.checkIfFlightExists(flights.length)
 
   return flights
 }
@@ -86,7 +86,7 @@ exports.getAvailableFlights = async () => {
 
   const flights = await Flight.find(query)
 
-  validate.checkIfFlightExists(flights.length)
+  validation.checkIfFlightExists(flights.length)
 
   return flights
 }

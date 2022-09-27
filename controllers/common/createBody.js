@@ -1,5 +1,5 @@
-const cache = require('memory-cache')
 const { common } = require('../../utils/index')
+const cache = require('memory-cache')
 
 const Chance = require('chance')
 const chance = new Chance()

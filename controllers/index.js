@@ -1,8 +1,8 @@
 module.exports = {
-  userController: require('./user/index'),
-  adminController: require('./admin/index'),
-  authController: require('./auth/index'),
-  flightController: require('./flight/index'),
+  bodyController: require('./common/createBody'),
   parserController: require('./parser/parser'),
-  bodyController: require('./common/createBody')
+  flightController: require('./flight/index'),
+  adminController: require('./admin/index'),
+  userController: require('./user/index'),
+  authController: require('./auth/index')
 }

@@ -1,14 +1,11 @@
+const { validation } = require('../validation/index')
 const router = require('express').Router()
-const inputValidation = require('../validation/joiValidation')
 const {
   flightController,
   parserController,
   adminController,
   bodyController
 } = require('../controllers/index')
-
-//TODO: Add data check if there is something to update
-//TODO: FORBID GOING UNDER 0 WITH TICKETS
 
 /**
  * Get available flight
@@ -25,18 +22,17 @@ router.get(
 router.post(
   '/book-flight',
   parserController.parsePath,
-  inputValidation.reqValidation,
+  validation.reqValidation,
   flightController.bookFlight
 )
 
 // ADMIN
-
 /**
  * Get all flights
  */
 router.get(
   '/get-all-flights',
-  inputValidation.checkIfAdmin,
+  validation.checkIfAdmin,
   parserController.parsePath,
   adminController.getAllFlights
 )
@@ -46,7 +42,7 @@ router.get(
  */
 router.get(
   '/get-flight',
-  inputValidation.checkIfAdmin,
+  validation.checkIfAdmin,
   parserController.parsePath,
   adminController.getFlight
 )
@@ -56,10 +52,10 @@ router.get(
  */
 router.post(
   '/add-new-flight',
-  inputValidation.checkIfAdmin,
+  validation.checkIfAdmin,
   parserController.parsePath,
   bodyController.createBody,
-  inputValidation.reqValidation,
+  validation.reqValidation,
   adminController.addNewFlight
 )
 
@@ -68,9 +64,9 @@ router.post(
  */
 router.put(
   '/update-flight',
-  inputValidation.checkIfAdmin,
+  validation.checkIfAdmin,
   parserController.parsePath,
-  inputValidation.reqValidation,
+  validation.reqValidation,
   adminController.updateFlight
 )
 
@@ -79,9 +75,9 @@ router.put(
  */
 router.delete(
   '/delete-flight',
-  inputValidation.checkIfAdmin,
+  validation.checkIfAdmin,
   parserController.parsePath,
-  inputValidation.reqValidation,
+  validation.reqValidation,
   adminController.deleteFlight
 )
 

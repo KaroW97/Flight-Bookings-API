@@ -1,12 +1,12 @@
-const Ticket = require('../models/Ticket')
 const { queryUtils, common } = require('../utils/index')
+const { validation } = require('../validation/index')
+const Ticket = require('../models/Ticket')
 const userService = require('./user')
-const validate = require('../validation/validation')
 
 exports.getTicketById = async (id) => {
   const ticket = await Ticket.findById(id)
 
-  validate.checkIfTicketExists(ticket)
+  validation.checkIfTicketExists(ticket)
 
   return ticket
 }
@@ -14,7 +14,7 @@ exports.getTicketById = async (id) => {
 exports.getAndSortTickets = async (user) => {
   const tickets = await Ticket.find({ user })
 
-  validate.checkIfTicketExists(tickets.length)
+  validation.checkIfTicketExists(tickets.length)
 
   const sorted = common.sortString(tickets)
 
@@ -32,7 +32,7 @@ exports.getTickets = async (bookedTicketsIds) => {
 
   const tickets = await Ticket.find(query)
 
-  validate.checkIfTicketExists(tickets.length)
+  validation.checkIfTicketExists(tickets.length)
 
   const sorted = common.sortString(tickets)
 
@@ -108,7 +108,7 @@ exports.findManyTicketsAndDelete = async (user) => {
 exports.findTicketAndDelete = async (_id) => {
   const ticket = await Ticket.findOneAndDelete({ _id })
 
-  validate.checkIfTicketExists(ticket)
+  validation.checkIfTicketExists(ticket)
 
   return ticket
 }

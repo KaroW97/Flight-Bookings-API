@@ -1,6 +1,6 @@
+const { generateQuery } = require('./queryHelpers')
 const { queries, MongoQuery } = require('./Query')
 const mongoQuery = new MongoQuery()
-const { generateQuery } = require('./queryHelpers')
 
 /**
  * Update flight data

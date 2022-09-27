@@ -1,8 +1,8 @@
-const mongoose = require('mongoose')
-const { Schema } = mongoose
 const { common } = require('../utils/index')
-
+const mongoose = require('mongoose')
 const Chance = require('chance')
+
+const { Schema } = mongoose
 const chance = new Chance()
 
 const Flight = new Schema(

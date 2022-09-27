@@ -1,6 +1,6 @@
 module.exports = {
-  common: require('./common'),
-  errors: require('./errors'),
+  queryUtils: require('./mongo/queryUtils'),
   message: require('./message'),
-  queryUtils: require('./mongo/queryUtils')
+  common: require('./common'),
+  errors: require('./errors')
 }
